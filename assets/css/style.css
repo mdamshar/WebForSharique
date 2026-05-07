@@ -29,7 +29,10 @@ h1, h2, h3, h4, h5 {
 
 /* Navigation */
 .navbar {
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background: rgba(17, 17, 17, 0.82) !important;
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.16);
 }
 
 .navbar-logo {
@@ -38,19 +41,72 @@ h1, h2, h3, h4, h5 {
 }
 
 .brand-text {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
     font-weight: 700;
     color: #fff;
+    letter-spacing: 0.2px;
 }
 
-.navbar-nav .nav-link {
-    margin: 0 10px;
+.navbar-nav .nav-link:not(.btn) {
+    margin: 0 4px;
     font-weight: 600;
-    transition: color 0.3s ease;
+    color: rgba(255, 255, 255, 0.9) !important;
+    padding: 8px 12px;
+    border-radius: 10px;
+    position: relative;
+    transition: color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
 }
 
-.navbar-nav .nav-link:hover {
-    color: var(--accent) !important;
+.navbar-nav .nav-link:not(.btn)::after {
+    content: '';
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 4px;
+    height: 2px;
+    border-radius: 999px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.2s ease;
+}
+
+.navbar-nav .nav-link:not(.btn):hover {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.07);
+    transform: translateY(-1px);
+}
+
+.navbar-nav .nav-link:not(.btn):hover::after {
+    transform: scaleX(1);
+}
+
+.navbar-nav .nav-link.active:not(.btn) {
+    color: #111 !important;
+    background: linear-gradient(135deg, rgba(244, 183, 64, 0.98), rgba(240, 165, 26, 0.95));
+    box-shadow: 0 8px 20px rgba(244, 183, 64, 0.25);
+}
+
+.navbar-nav .nav-link.active:not(.btn)::after {
+    transform: scaleX(0);
+}
+
+.navbar-nav .nav-link:focus,
+.navbar-nav .nav-link:focus-visible {
+    outline: 3px solid rgba(244, 183, 64, 0.35);
+    outline-offset: 2px;
+}
+
+.navbar-toggler {
+    padding: 0.6rem 0.75rem;
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+.navbar-nav .nav-link.btn {
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-weight: 700;
+    margin-left: 8px;
 }
 
 /* Hero Section */
@@ -88,6 +144,30 @@ h1, h2, h3, h4, h5 {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* Enhanced hero layout */
+.hero-content {
+    padding: 6rem 1rem;
+}
+
+.hero-title {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    line-height: 1.02;
+}
+
+.hero-sub {
+    max-width: 820px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-primary-cta {
+    box-shadow: 0 8px 30px rgba(244, 183, 64, 0.18);
+}
+
+.hero-secondary-cta {
+    border: 2px solid rgba(255,255,255,0.18);
 }
 
 /* About Highlights */
@@ -203,36 +283,346 @@ section h3 {
 }
 
 /* Quote Form */
+.quote-section {
+    background:
+        radial-gradient(circle at top left, rgba(244, 183, 64, 0.18), transparent 28%),
+        radial-gradient(circle at right center, rgba(29, 95, 191, 0.18), transparent 28%),
+        linear-gradient(135deg, #0f1722 0%, #12213a 48%, #0d1624 100%);
+}
+
+.quote-shell {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 28px;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.24);
+    backdrop-filter: blur(12px);
+}
+
+.quote-intro h2,
+.quote-form-head h3 {
+    color: #fff;
+    margin-bottom: 0.25rem;
+}
+
+.quote-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.45rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.9rem;
+}
+
+.quote-lead,
+.quote-form-head p,
+.quote-point span {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.quote-points {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.quote-point {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 14px;
+    padding: 0.8rem 0.9rem;
+}
+
+.quote-point i {
+    color: var(--accent);
+    font-size: 1.05rem;
+    flex: 0 0 auto;
+}
+
+.quote-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.quote-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 0.85rem;
+    border-radius: 999px;
+    background: rgba(244, 183, 64, 0.14);
+    border: 1px solid rgba(244, 183, 64, 0.24);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.quote-section {
+    background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.07));
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 24px;
+    padding: clamp(1.2rem, 2.5vw, 1.8rem);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.quote-form-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(244, 183, 64, 0.12), transparent 40%);
+    pointer-events: none;
+.quote-shell {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 28px;
+    color: rgba(255, 255, 255, 0.94);
+    margin-bottom: 0.4rem;
+    font-size: 0.92rem;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.24);
+    backdrop-filter: blur(12px);
+}
+
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    padding: 0.95rem 1rem;
+    background: rgba(255, 255, 255, 0.09);
+    color: #fff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.quote-form-card .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.quote-form-card .form-select option {
+    color: #111;
+    margin-bottom: 0.25rem;
+}
+
+.quote-eyebrow {
+    display: inline-flex;
+    box-shadow: 0 0 0 0.22rem rgba(244, 183, 64, 0.28);
+    transform: translateY(-1px);
+    gap: 0.45rem;
+
+.quote-actions {
+    padding-top: 0.35rem;
+}
+
+.quote-submit-btn,
+.quote-email-btn {
+    border-radius: 999px;
+    padding-inline: 1.25rem;
+}
+
+.quote-submit-btn {
+    box-shadow: 0 10px 24px rgba(244, 183, 64, 0.22);
+}
+
+.quote-email-btn {
+    border-color: rgba(255, 255, 255, 0.22);
+}
+
+.quote-form-modern {
+    min-height: 100%;
+}
+    padding: 0.45rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.9rem;
+}
+
+.quote-lead,
+.quote-form-head p,
+.quote-point span {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.quote-points {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.quote-point {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 14px;
+    padding: 0.8rem 0.9rem;
+}
+
+.quote-point i {
+    color: var(--accent);
+    font-size: 1.05rem;
+    flex: 0 0 auto;
+}
+
+.quote-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.quote-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 0.85rem;
+    border-radius: 999px;
+    background: rgba(244, 183, 64, 0.14);
+    border: 1px solid rgba(244, 183, 64, 0.24);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
 .quote-form-card {
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 20px;
-    padding: 1.5rem;
-    box-shadow: var(--shadow);
-    backdrop-filter: blur(6px);
+    background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.07));
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 24px;
+    padding: clamp(1.2rem, 2.5vw, 1.8rem);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.quote-form-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(244, 183, 64, 0.12), transparent 40%);
+    pointer-events: none;
 }
 
 .quote-form-card .form-label {
     font-weight: 600;
-    color: #fff;
+    color: rgba(255, 255, 255, 0.94);
+    margin-bottom: 0.4rem;
+    font-size: 0.92rem;
 }
 
 .quote-form-card .form-control,
 .quote-form-card .form-select {
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    padding: 0.85rem 1rem;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    padding: 0.95rem 1rem;
+    background: rgba(255, 255, 255, 0.09);
+    color: #fff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.quote-form-card .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.quote-form-card .form-select option {
+    color: #111;
 }
 
 .quote-form-card .form-control:focus,
 .quote-form-card .form-select:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 0.2rem rgba(244, 183, 64, 0.25);
+    box-shadow: 0 0 0 0.22rem rgba(244, 183, 64, 0.28);
+    transform: translateY(-1px);
+}
+
+.quote-actions {
+    padding-top: 0.35rem;
+}
+
+.quote-submit-btn,
+.quote-email-btn {
+    border-radius: 999px;
+    padding-inline: 1.25rem;
+}
+
+.quote-submit-btn {
+    box-shadow: 0 10px 24px rgba(244, 183, 64, 0.22);
+}
+
+.quote-email-btn {
+    border-color: rgba(255, 255, 255, 0.22);
+}
+
+.quote-form-modern {
+    min-height: 100%;
+}
+
+.invalid-feedback {
+    color: #ffd6d6;
+    background: rgba(255, 0, 0, 0.04);
+    padding: 0.45rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
 }
 
 .quote-note,
 .form-status {
     color: rgba(255, 255, 255, 0.85);
+}
+
+@media (max-width: 768px) {
+    .quote-shell {
+        padding: 1rem;
+        border-radius: 22px;
+    }
+
+    .quote-points {
+        margin-bottom: 1rem;
+    }
+
+    .quote-actions {
+        gap: 0.75rem !important;
+    }
+
+    .quote-submit-btn,
+    .quote-email-btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .quote-shell {
+        padding: 1rem;
+        border-radius: 22px;
+    }
+
+    .quote-points {
+        margin-bottom: 1rem;
+    }
+
+    .quote-actions {
+        gap: 0.75rem !important;
+    }
+
+    .quote-submit-btn,
+    .quote-email-btn {
+        width: 100%;
+    }
 }
 
 /* Video Section */
@@ -255,6 +645,58 @@ video {
 .gallery-masonry {
     column-count: 3;
     column-gap: 1.5rem;
+}
+
+/* Lightbox / Modal */
+.lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 2rem;
+}
+
+.lightbox-content {
+    max-width: 1100px;
+    width: 100%;
+    max-height: 90vh;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #000;
+    display: grid;
+    grid-template-rows: 1fr auto;
+}
+
+.lightbox-media {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #000;
+}
+
+.lightbox-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    gap: 1rem;
+}
+
+.lightbox-btn {
+    background: transparent;
+    border: 0;
+    color: #fff;
+    font-size: 1.05rem;
+    padding: 0.5rem;
+    cursor: pointer;
+}
+
+.lightbox-title {
+    color: #fff;
+    font-weight: 700;
 }
 
 .gallery-item {
@@ -396,4 +838,126 @@ video {
 
 .bg-light {
     background-color: var(--surface) !important;
+}
+
+/* Footer improvements */
+.site-footer {
+    background:
+        radial-gradient(circle at 10% 0%, rgba(244, 183, 64, 0.16), transparent 35%),
+        linear-gradient(160deg, #101820 0%, #121f33 45%, #0b1625 100%);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+    overflow: hidden;
+}
+
+.site-footer::before {
+    content: '';
+    position: absolute;
+    width: 380px;
+    height: 380px;
+    border-radius: 50%;
+    top: -180px;
+    right: -140px;
+    background: rgba(255, 255, 255, 0.04);
+    pointer-events: none;
+}
+
+.footer-cta {
+    background: linear-gradient(120deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 18px;
+    padding: 1rem 1.1rem;
+    margin-bottom: 0.6rem;
+}
+
+.footer-separator {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.site-footer .footer-logo {
+    height: 48px;
+    width: auto;
+}
+
+.site-footer .footer-brand h5 {
+    margin-bottom: 0.25rem;
+}
+
+.footer-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.footer-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: #f6f8fc;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 999px;
+    padding: 0.35rem 0.65rem;
+}
+
+.site-footer .footer-contact a,
+.site-footer .footer-links a {
+    color: rgba(255,255,255,0.92);
+    text-decoration: none;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.site-footer .footer-contact a:hover,
+.site-footer .footer-links a:hover {
+    color: var(--accent);
+    transform: translateX(2px);
+}
+
+.site-footer .btn-outline-light {
+    border-color: rgba(255,255,255,0.24);
+}
+
+.site-footer .social-links .btn {
+    border-radius: 999px;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.site-footer .social-links .btn:hover {
+    background: var(--accent);
+    color: #111;
+    border-color: var(--accent);
+}
+
+.site-footer .form-control {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.22);
+    color: #fff;
+}
+
+.site-footer .form-control::placeholder {
+    color: rgba(255,255,255,0.65);
+}
+
+.site-footer .form-control:focus {
+    border-color: rgba(244, 183, 64, 0.9);
+    box-shadow: 0 0 0 0.2rem rgba(244, 183, 64, 0.2);
+}
+
+#back-to-top {
+    border-radius: 999px;
+    padding-inline: 0.9rem;
+}
+
+@media (max-width: 576px) {
+    .site-footer .footer-logo { height: 36px; }
+    .footer-cta {
+        padding: 0.85rem;
+    }
 }
