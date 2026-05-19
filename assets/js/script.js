@@ -452,3 +452,63 @@ function setupBackToTop() {
     };
     btns.forEach(b => b.addEventListener('click', handleClick));
 }
+
+/* Geometric Gallery: Scroll Reveal & Parallax */
+function setupGeometricGalleryAnimations() {
+    const frames = document.querySelectorAll('.gallery-frame');
+    if (!frames.length) return;
+
+    const observerOptions = {
+        threshold: 0.12,
+        rootMargin: '0px 0px -80px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0) scale(1)';
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    frames.forEach((frame, index) => {
+        frame.style.opacity = '0';
+        frame.style.transform = 'translateY(40px) scale(0.92)';
+        frame.style.transition = `opacity 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) ${index * 0.12}s, transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) ${index * 0.12}s`;
+        observer.observe(frame);
+    });
+
+    // Enhanced parallax effect on scroll with varying intensity
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                const scrollY = window.scrollY;
+                
+                frames.forEach((frame, index) => {
+                    const rect = frame.getBoundingClientRect();
+                    const frameCenter = rect.top + rect.height / 2;
+                    const distance = frameCenter - window.innerHeight / 2;
+                    
+                    if (rect.top < window.innerHeight && rect.bottom > 0) {
+                        const baseIntensity = (index % 4) * 0.15;
+                        const speedFactor = 1 + (index % 3) * 0.05;
+                        const offset = distance * baseIntensity * speedFactor * 0.08;
+                        
+                        frame.style.transform = `translateY(${offset}px) perspective(1000px) rotateX(${offset * 0.01}deg)`;
+                    }
+                });
+
+                ticking = false;
+            });
+            ticking = true;
+        }
+    }, { passive: true });
+}
+
+// Initialize gallery animations when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    setupGeometricGalleryAnimations();
+});
