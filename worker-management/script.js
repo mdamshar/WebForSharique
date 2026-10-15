@@ -11,18 +11,44 @@ const money = n => new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 
+
 const API_URL = 'https://script.google.com/macros/s/AKfycbzUJwAgvcC1GTp8ay_gG0_PipSSx6zuAG5BNRy0cFcEZN3Kk5xTg9FhR2GpxnxIGuh0EQ/exec';
 
 const call = async (fn, ...args) => {
-  const response = await fetch(API_URL, {
-    method: 'POST',
-    body: JSON.stringify({
-      action: fn,
-      args: args
-    })
-  });
+  let response;
 
-  const result = await response.json();
+  try {
+    response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8'
+      },
+      body: JSON.stringify({
+        action: fn,
+        args: args
+      })
+    });
+  } catch (err) {
+    console.error('Apps Script fetch error:', err);
+    throw new Error(
+      'Backend connection failed. Check Console for CORS details.'
+    );
+  }
+
+  let result;
+
+  try {
+    result = await response.json();
+  } catch (err) {
+    console.error('Apps Script response error:', err);
+    throw new Error(
+      'Backend did not return readable JSON. Check the Network response.'
+    );
+  }
+
+  if (!response.ok) {
+    throw new Error('HTTP error: ' + response.status);
+  }
 
   if (!result.success) {
     throw new Error(result.error || 'Request failed.');
@@ -30,6 +56,7 @@ const call = async (fn, ...args) => {
 
   return result.data;
 };
+
 
 
 function showToast(message,bad=false){const el=$('toast');el.textContent=message;el.classList.toggle('bad',bad);el.classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>el.classList.add('hidden'),4500)}
