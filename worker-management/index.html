@@ -1,15 +1,122 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
+  <base target="_top">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Perwez Associate | Worker Management</title>
+  <?!= include('Styles'); ?>
 </head>
 <body>
-  <h1>Perwez Associate</h1>
-  <h2>Worker Management System</h2>
-  <p>Attendance and Salary Management</p>
-  <p>App setup in progress.</p>
-  <a href="/">Back to Website</a>
+  <div id="loginView" class="login-shell">
+    <div class="login-card">
+      <div class="brand-mark">PA</div>
+      <p class="eyebrow">PERWEZ ASSOCIATE</p>
+      <h1>Worker Management</h1>
+      <p class="muted">Attendance, salary and payments in one place.</p>
+      <form id="loginForm">
+        <label>Username<input id="username" autocomplete="username" required></label>
+        <label>Password<input id="password" type="password" autocomplete="current-password" required></label>
+        <button class="btn primary full" type="submit">Sign in securely</button>
+        <p id="loginError" class="error" role="alert"></p>
+      </form>
+    </div>
+  </div>
+
+  <div id="appView" class="app hidden">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark small">PA</div><div><b>Perwez Associate</b><small>Worker Management</small></div></div>
+      <nav>
+        <button class="nav-item active" data-page="dashboard">▦ <span>Dashboard</span></button>
+        <button class="nav-item" data-page="workers">♙ <span>Workers</span></button>
+        <button class="nav-item" data-page="attendance">✓ <span>Attendance</span></button>
+        <button class="nav-item" data-page="payments">₹ <span>Payments</span></button>
+        <button class="nav-item" data-page="reports">▤ <span>Reports & Ledger</span></button>
+        <button class="nav-item" data-page="settings">⚙ <span>Settings</span></button>
+      </nav>
+      <div class="sidebar-bottom"><small>Private workspace</small><button id="logoutBtn" class="btn outline full">Log out</button></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar"><div><p class="eyebrow">WORKFORCE OVERVIEW</p><h1 id="pageTitle">Dashboard</h1></div><div class="top-right"><span id="todayLabel" class="date-chip"></span><span class="avatar">PA</span></div></header>
+      <div id="toast" class="toast hidden"></div>
+
+      <section id="page-dashboard" class="page">
+        <div class="welcome"><div><p class="eyebrow light">PERWEZ ASSOCIATE</p><h2>Attendance to accounts,<br>made simple.</h2><p>Keep every worker, day and payment accounted for.</p></div><div class="welcome-icon">✓</div></div>
+        <div class="stat-grid">
+          <article class="stat-card"><span class="stat-label">Active workers</span><strong id="statWorkers">0</strong><small>Registered workers</small></article>
+          <article class="stat-card"><span class="stat-label">Present today</span><strong id="statPresent">0</strong><small id="statAbsent">0 absent today</small></article>
+          <article class="stat-card"><span class="stat-label">Total earned</span><strong id="statEarned">₹0</strong><small>All recorded attendance</small></article>
+          <article class="stat-card"><span class="stat-label">Total paid</span><strong id="statPaid">₹0</strong><small>All recorded payments</small></article>
+          <article class="stat-card accent"><span class="stat-label">Pending dues</span><strong id="statDues">₹0</strong><small>Earned minus paid</small></article>
+        </div>
+        <div class="panel"><div class="panel-heading"><div><h2>Worker balances</h2><p>Lifetime earnings and payments</p></div><button class="btn primary" data-goto="workers">+ Add worker</button></div><div class="table-wrap"><table><thead><tr><th>Worker</th><th>Trade</th><th>Daily salary</th><th>Total earned</th><th>Total paid</th><th>Pending dues</th></tr></thead><tbody id="balanceTable"></tbody></table></div></div>
+      </section>
+
+      <section id="page-workers" class="page hidden">
+        <div class="panel"><div class="panel-heading"><div><h2>Worker directory</h2><p>Add and maintain worker details</p></div><button id="newWorkerBtn" class="btn primary">+ Add worker</button></div>
+          <div class="toolbar"><input id="workerSearch" placeholder="Search name, ID or trade…"><select id="workerStatusFilter"><option value="Active">Active workers</option><option value="All">All workers</option><option value="Inactive">Inactive workers</option></select></div>
+          <div class="table-wrap"><table><thead><tr><th>Worker</th><th>Trade</th><th>Daily salary</th><th>Mobile</th><th>Status</th><th>Action</th></tr></thead><tbody id="workersTable"></tbody></table></div>
+        </div>
+      </section>
+
+      <section id="page-attendance" class="page hidden">
+        <div class="panel"><div class="panel-heading"><div><h2>Daily attendance</h2><p>One attendance record per worker per date</p></div><div class="inline-controls"><label class="compact-label">Date<input id="attendanceDate" type="date"></label><button id="loadAttendanceBtn" class="btn outline">Load date</button></div></div>
+          <div class="callout">Present = full daily salary · Half Day = 50% · Absent/Leave = ₹0</div>
+          <div class="table-wrap"><table><thead><tr><th>Worker</th><th>Trade</th><th>Daily salary</th><th>Status</th><th>Earned today</th><th>Remarks</th><th></th></tr></thead><tbody id="attendanceTable"></tbody></table></div>
+        </div>
+      </section>
+
+      <section id="page-payments" class="page hidden">
+        <div class="split-grid">
+          <div class="panel"><div class="panel-heading"><div><h2>Record a payment</h2><p>Full payment, partial payment or advance</p></div></div>
+            <form id="paymentForm" class="form-grid">
+              <label class="span-2">Worker<select id="paymentWorker" required></select></label>
+              <label>Payment date<input id="paymentDate" type="date" required></label>
+              <label>Amount (₹)<input id="paymentAmount" type="number" min="1" step="0.01" required></label>
+              <label>Payment mode<select id="paymentMode"><option>Cash</option><option>UPI</option><option>Bank transfer</option><option>Cheque</option></select></label>
+              <label>Remarks<input id="paymentRemarks" maxlength="250" placeholder="e.g. weekly wages"></label>
+              <div class="span-2"><button class="btn primary" type="submit">Save payment</button></div>
+            </form>
+          </div>
+          <div class="panel"><div class="panel-heading"><div><h2>Selected worker balance</h2><p>Updates after selecting a worker</p></div></div><div id="paymentBalance" class="balance-box"><p class="muted">Select a worker to view their balance.</p></div></div>
+        </div>
+        <div class="panel"><div class="panel-heading"><div><h2>Recent payments</h2><p>Payment history is append-only</p></div></div><div class="table-wrap"><table><thead><tr><th>Date</th><th>Worker</th><th>Trade</th><th>Amount</th><th>Mode</th><th>Remarks</th></tr></thead><tbody id="paymentsTable"></tbody></table></div></div>
+      </section>
+
+      <section id="page-reports" class="page hidden">
+        <div class="panel"><div class="panel-heading"><div><h2>Salary report & ledger</h2><p>Filter attendance and payments by date range</p></div><div class="inline-controls"><label class="compact-label">From<input id="reportFrom" type="date"></label><label class="compact-label">To<input id="reportTo" type="date"></label><button id="runReportBtn" class="btn primary">Generate</button></div></div>
+          <div class="toolbar"><input id="reportSearch" placeholder="Filter worker or trade…"><button id="exportCsvBtn" class="btn outline">Export CSV</button><button id="printReportBtn" class="btn outline">Print / Save PDF</button></div>
+          <div class="table-wrap"><table id="reportTable"><thead><tr><th>Worker</th><th>Trade</th><th>Present</th><th>Half days</th><th>Absent</th><th>Earned (range)</th><th>Paid (range)</th><th>Total earned</th><th>Total paid</th><th>Pending dues</th></tr></thead><tbody id="reportsTable"></tbody></table></div>
+        </div>
+      </section>
+
+      <section id="page-settings" class="page hidden">
+        <div class="panel narrow"><div class="panel-heading"><div><h2>Account security</h2><p>Change your account password</p></div></div>
+          <form id="passwordForm" class="form-grid"><label class="span-2">Current password<input id="currentPassword" type="password" autocomplete="current-password" required></label><label class="span-2">New password (minimum 12 characters)<input id="newPassword" type="password" minlength="12" autocomplete="new-password" required></label><label class="span-2">Confirm new password<input id="confirmPassword" type="password" minlength="12" autocomplete="new-password" required></label><div class="span-2"><button class="btn primary" type="submit">Change password</button></div></form>
+          <div class="security-note"><b>Keep your data private</b><p>Do not share the spreadsheet or Apps Script project with unauthorized people. Use a strong unique password and log out on shared devices.</p></div>
+        </div>
+      </section>
+      <footer>© <span id="year"></span> Perwez Associate · Worker Management System</footer>
+    </main>
+  </div>
+
+  <dialog id="workerDialog" class="modal">
+    <form id="workerForm" method="dialog">
+      <div class="modal-heading"><div><p class="eyebrow">WORKER PROFILE</p><h2 id="workerModalTitle">Add worker</h2></div><button type="button" id="closeWorkerDialog" class="icon-btn" aria-label="Close">×</button></div>
+      <input id="editWorkerId" type="hidden">
+      <div class="form-grid">
+        <label class="span-2">Full name<input id="workerName" maxlength="100" required></label>
+        <label>Trade<input id="workerTrade" list="tradeOptions" maxlength="60" placeholder="e.g. Carpenter" required><datalist id="tradeOptions"><option>Carpenter</option><option>Electrician</option><option>Plumber</option><option>Painter</option><option>Mason</option><option>Helper</option><option>POP Worker</option><option>Tile Fitter</option></datalist></label>
+        <label>Daily salary (₹)<input id="workerSalary" type="number" min="0" step="0.01" required></label>
+        <label>Mobile number<input id="workerMobile" maxlength="20" inputmode="tel"></label>
+        <label>Joining date<input id="workerJoining" type="date" required></label>
+        <label class="span-2">Status<select id="workerState"><option>Active</option><option>Inactive</option></select></label>
+      </div>
+      <div class="modal-actions"><button type="button" id="cancelWorkerBtn" class="btn outline">Cancel</button><button type="submit" class="btn primary">Save worker</button></div>
+    </form>
+  </dialog>
+  <script>
+    <?!= include('JavaScript'); ?>
+  </script>
 </body>
 </html>
