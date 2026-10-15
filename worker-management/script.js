@@ -9,9 +9,29 @@ const localDate = d => {
 };
 const money = n => new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:2}).format(Number(n)||0);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const call = (fn, ...args) => new Promise((resolve,reject) => {
-  google.script.run.withSuccessHandler(resolve).withFailureHandler(err => reject(new Error(err && err.message ? err.message : String(err))))[fn](...args);
-});
+
+
+const API_URL = 'https://script.google.com/macros/s/AKfycbzUJwAgvcC1GTp8ay_gG0_PipSSx6zuAG5BNRy0cFcEZN3Kk5xTg9FhR2GpxnxIGuh0EQ/exec';
+
+const call = async (fn, ...args) => {
+  const response = await fetch(API_URL, {
+    method: 'POST',
+    body: JSON.stringify({
+      action: fn,
+      args: args
+    })
+  });
+
+  const result = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.error || 'Request failed.');
+  }
+
+  return result.data;
+};
+
+
 function showToast(message,bad=false){const el=$('toast');el.textContent=message;el.classList.toggle('bad',bad);el.classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>el.classList.add('hidden'),4500)}
 function setBusy(button,busy,label){if(!button)return;button.disabled=busy;if(busy){button.dataset.old=button.textContent;button.textContent=label||'Please wait…'}else{button.textContent=button.dataset.old||button.textContent}}
 function workerById(id){return appData.workers.find(w=>String(w.WorkerID)===String(id))}
