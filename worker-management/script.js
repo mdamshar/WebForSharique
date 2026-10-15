@@ -12,7 +12,7 @@ const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp
 
 
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbzUJwAgvcC1GTp8ay_gG0_PipSSx6zuAG5BNRy0cFcEZN3Kk5xTg9FhR2GpxnxIGuh0EQ/exec';
+const API_URL = 'https://worker-management-api.shariqueperwez3.workers.dev/';
 
 const call = async (fn, ...args) => {
   let response;
